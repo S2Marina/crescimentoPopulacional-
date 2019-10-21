@@ -1,0 +1,43 @@
+FUNCTION_BLOCK regras	// Block definition (there may be more than one block per file)
+
+// Define input variables
+VAR_INPUT				
+	natalidade : REAL;
+END_VAR
+
+// Define output variable
+VAR_OUTPUT				
+	crescimento : REAL;
+END_VAR
+
+// Fuzzify input variable 'natalidade': {'baixa', 'media' , 'alta'}
+FUZZIFY natalidade			
+	TERM baixa := (10,1) (15,0);
+	TERM media := trape 14.69 16.19 17.19 18.69;
+	TERM alta := (17,0) (21,1);
+END_FUZZIFY
+
+// Defzzzify output variable 'crescimento' : {'baixo', 'alto', 'medio' }
+DEFUZZIFY crescimento			
+	TERM baixo := (-0.31,1) (-0.20,1) (0.10, 0);
+	TERM medio := trian 0.1 0.5 0.8 ;
+	TERM alto := trian 0.75 0.9 1 ;
+	METHOD : COG;		// Use 'Center Of Gravity' defuzzification method
+	DEFAULT := 0;		// Default value is 0 (if no rule activates defuzzifier)
+END_DEFUZZIFY
+
+// Inference rules
+RULEBLOCK No1
+	AND : MIN;	// Use 'min' for 'and'
+	ACT : MIN;	// Use 'min' activation method
+	ACCU : MAX;	// Use 'max' accumulation method
+
+	RULE 1 : IF natalidade IS baixa THEN crescimento IS baixo;
+        RULE 2 : IF natalidade IS media THEN crescimento IS medio;
+        RULE 3 : IF natalidade IS alta THEN crescimento IS alto;
+
+END_RULEBLOCK
+
+END_FUNCTION_BLOCK
+
+
