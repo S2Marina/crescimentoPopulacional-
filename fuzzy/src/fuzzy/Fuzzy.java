@@ -5,12 +5,13 @@
  */
 package fuzzy;
 
+import java.util.ArrayList;
+import java.util.List;
 import net.sourceforge.jFuzzyLogic.FIS;
 import net.sourceforge.jFuzzyLogic.FunctionBlock;
 import net.sourceforge.jFuzzyLogic.plot.JFuzzyChart;
 import net.sourceforge.jFuzzyLogic.rule.Variable;
 //import net.sourceforge.jFuzzyLogic.rule.FuzzyRuleSet;
-
 
 /**
  *
@@ -25,7 +26,7 @@ public class Fuzzy {
         // Load from 'FCL' file
         String fileName = "regras.fcl";
         FIS fis = FIS.load(fileName, true);
-
+                
         // Error while loading?
         if (fis == null) {
             System.err.println("Can't load file: '" + fileName + "'");
@@ -34,21 +35,20 @@ public class Fuzzy {
 
         FunctionBlock functionBlock = fis.getFunctionBlock(null);
         // Show 
-        JFuzzyChart.get().chart(functionBlock);
+        //JFuzzyChart.get().chart(functionBlock);
 
         // Set inputs
-        fis.setVariable("natalidade", 19.4);
-        fis.setVariable("mortalidade", 19.4);
-     
+        fis.setVariable("natalidade", 15.08);
+        fis.setVariable("mortalidade", 6.36);
+
         // Evaluate
         fis.evaluate();
 
         // Show output variable's chart
-        Variable tip = functionBlock.getVariable("crescimento");
-        JFuzzyChart.get().chart(functionBlock.getVariable("crescimento"), functionBlock.getVariable("crescimento").getDefuzzifier(), true);
+        //JFuzzyChart.get().chart(functionBlock.getVariable("crescimento"), functionBlock.getVariable("crescimento").getDefuzzifier(), true);
 
         // Print ruleSet
         //System.out.println(fis);
-        System.out.println("Output value:" + fis.getVariable("crescimento").getValue()); 
+        System.out.println("Output value:" + fis.getVariable("crescimento").getValue());
     }
 }
