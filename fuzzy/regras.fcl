@@ -15,21 +15,22 @@ END_VAR
 FUZZIFY natalidade			
 	TERM baixa := (10,1) (15,0);
 	TERM media := trape 14.69 16.19 17.19 18.69;
-	TERM alta := (17,0) (21,1);
+	TERM alta := (17,0) (21,1) (24, 1);
 END_FUZZIFY
 
 // Fuzzify input variable 'mortalidade': {'baixa', 'media' , 'alta'}
 FUZZIFY mortalidade			
 	TERM baixa := (4,1) (5.5,0);
 	TERM media := trape 5 6.04 6.44 7.48;
-	TERM alta := (7,0) (8,1);
+	TERM alta := (7,0) (8,1) (9,1);
 END_FUZZIFY
 
-// Defzzzify output variable 'crescimento' : {'baixo', 'alto', 'medio' }
+// Defzzzify output variable 'crescimento' : {'baixo', 'alto', 'medio', muito_alto}
 DEFUZZIFY crescimento			
-	TERM baixo := (0.1,1) (0.3,1) (0.6, 0);
+	TERM baixo := (0.3,1) (0.55,1) (0.9, 0);
 	TERM medio := trian 0.5 0.88 1.3 ;
-	TERM alto := (0.89,0) (1.4,1) (2.5, 1);
+	TERM alto := (1.2,0) (1.5, 1) (1.6, 0);
+        TERM muito_alto := (1.4, 0) (2.5, 1);
 	METHOD : COG;		// Use 'Center Of Gravity' defuzzification method
 	DEFAULT := 0;		// Default value is 0 (if no rule activates defuzzifier)
 END_DEFUZZIFY
@@ -41,14 +42,14 @@ RULEBLOCK No1
 	ACCU : MAX;	// Use 'max' accumulation method
 
 	RULE 1 : IF natalidade IS baixa AND mortalidade IS baixa THEN crescimento IS medio;
-        RULE 2 : IF natalidade IS alta AND mortalidade IS baixa THEN crescimento IS alto;
+        RULE 2 : IF natalidade IS alta AND mortalidade IS baixa THEN crescimento IS muito_alto;
         RULE 3 : IF natalidade IS baixa AND mortalidade IS alta THEN crescimento IS baixo;
         RULE 4 : IF natalidade IS alta AND mortalidade IS alta THEN crescimento IS medio;
         RULE 5 : IF natalidade IS media AND mortalidade IS baixa THEN crescimento IS medio;
         RULE 6 : IF natalidade IS baixa AND mortalidade IS media THEN crescimento IS baixo;
         RULE 7 : IF natalidade IS media AND mortalidade IS alta THEN crescimento IS baixo;
         RULE 8 : IF natalidade IS alta AND mortalidade IS media THEN crescimento IS alto;
-        RULE 9 : IF natalidade IS media AND mortalidade IS media THEN crescimento IS medio;
+        RULE 9 : IF natalidade IS media AND mortalidade IS media THEN crescimento IS alto;
 
 END_RULEBLOCK
 

@@ -5,6 +5,7 @@
  */
 package fuzzy;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import net.sourceforge.jFuzzyLogic.FIS;
@@ -26,7 +27,12 @@ public class Fuzzy {
         // Load from 'FCL' file
         String fileName = "regras.fcl";
         FIS fis = FIS.load(fileName, true);
-                
+
+        Double natalidade[] = {21.55, 17.92, 22.41, 23.67, 15.42, 15.08, 15.51, 16.03, 15.02, 15.12, 19.4, 13.18, 16.61, 16.76, 19.62, 15.24, 15.88, 16.06, 14.34, 13.1, 15.41, 16.84, 22.6, 12.28, 13.57, 16.55, 14.19, 18.2};
+        Double mortalidade[] = {5.09, 7.22, 5.53, 4.53, 7.01, 6.36, 7.11, 4.14, 5.49, 5.9, 7.3, 6.12, 5.91, 5.42, 5.75, 8.37, 7.61, 8.18, 5.89, 7.26, 6.5, 6.03, 5.52, 6.63, 5.04, 6.86, 5.82, 6.2};
+
+        DecimalFormat df = new DecimalFormat("0.00");
+        
         // Error while loading?
         if (fis == null) {
             System.err.println("Can't load file: '" + fileName + "'");
@@ -35,20 +41,23 @@ public class Fuzzy {
 
         FunctionBlock functionBlock = fis.getFunctionBlock(null);
         // Show 
-        //JFuzzyChart.get().chart(functionBlock);
+        JFuzzyChart.get().chart(functionBlock);
 
         // Set inputs
-        fis.setVariable("natalidade", 15.08);
-        fis.setVariable("mortalidade", 6.36);
-
-        // Evaluate
-        fis.evaluate();
+        for (int i = 0; i < 28; i++) {
+            fis.setVariable("natalidade", natalidade[i]);
+            fis.setVariable("mortalidade", mortalidade[i]);
+                
+            // Evaluate
+            fis.evaluate();
+        
+            System.out.println(df.format(fis.getVariable("crescimento").getValue()));
+        }
 
         // Show output variable's chart
         //JFuzzyChart.get().chart(functionBlock.getVariable("crescimento"), functionBlock.getVariable("crescimento").getDefuzzifier(), true);
-
         // Print ruleSet
         //System.out.println(fis);
-        System.out.println("Output value:" + fis.getVariable("crescimento").getValue());
+        
     }
 }
