@@ -3,6 +3,7 @@ FUNCTION_BLOCK regras	// Block definition (there may be more than one block per 
 // Define input variables
 VAR_INPUT				
 	natalidade : REAL;
+        mortalidade : REAL;
 END_VAR
 
 // Define output variable
@@ -12,6 +13,13 @@ END_VAR
 
 // Fuzzify input variable 'natalidade': {'baixa', 'media' , 'alta'}
 FUZZIFY natalidade			
+	TERM baixa := (10,1) (15,0);
+	TERM media := trape 14.69 16.19 17.19 18.69;
+	TERM alta := (17,0) (21,1);
+END_FUZZIFY
+
+// Fuzzify input variable 'mortalidade': {'baixa', 'media' , 'alta'}
+FUZZIFY mortalidade			
 	TERM baixa := (10,1) (15,0);
 	TERM media := trape 14.69 16.19 17.19 18.69;
 	TERM alta := (17,0) (21,1);
@@ -32,9 +40,15 @@ RULEBLOCK No1
 	ACT : MIN;	// Use 'min' activation method
 	ACCU : MAX;	// Use 'max' accumulation method
 
-	RULE 1 : IF natalidade IS baixa THEN crescimento IS baixo;
-        RULE 2 : IF natalidade IS media THEN crescimento IS medio;
-        RULE 3 : IF natalidade IS alta THEN crescimento IS alto;
+	RULE 1 : IF natalidade IS baixa AND mortalidade IS baixa THEN crescimento IS medio;
+        RULE 2 : IF natalidade IS alta AND mortalidade IS baixa THEN crescimento IS alto;
+        RULE 3 : IF natalidade IS baixa AND mortalidade IS alta THEN crescimento IS baixo;
+        RULE 4 : IF natalidade IS alta AND mortalidade IS alta THEN crescimento IS medio;
+        RULE 5 : IF natalidade IS media AND mortalidade IS baixa THEN crescimento IS medio;
+        RULE 6 : IF natalidade IS baixa AND mortalidade IS media THEN crescimento IS baixo;
+        RULE 7 : IF natalidade IS media AND mortalidade IS alta THEN crescimento IS baixo;
+        RULE 8 : IF natalidade IS alta AND mortalidade IS media THEN crescimento IS alto;
+        RULE 9 : IF natalidade IS media AND mortalidade IS media THEN crescimento IS medio;
 
 END_RULEBLOCK
 

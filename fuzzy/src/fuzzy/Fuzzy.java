@@ -38,6 +38,7 @@ public class Fuzzy {
 
         // Set inputs
         fis.setVariable("natalidade", 19.4);
+        fis.setVariable("mortalidade", 19.4);
      
         // Evaluate
         fis.evaluate();
